@@ -13,6 +13,8 @@ namespace VRC_SS_Butler
 {
     public partial class NotifyIconWrapper : Component
     {
+
+        private File_Butler fileButler;
         public NotifyIconWrapper()
         {
             InitializeComponent();
@@ -20,7 +22,8 @@ namespace VRC_SS_Butler
             this.toolStripMenuItem_Open.Click += this.tootStripMenuItem_Open_Click;
             this.toolStripMenuItem_Exit.Click += this.tootStripMenuItem_Exit_Click;
 
-            fileSystemWatcher.Path = System.Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat";
+            fileButler = new File_Butler();
+            fileSystemWatcher.Path = fileButler.VrcPicFolderPath;
             fileSystemWatcher.Created += file_Created;
         }
 
@@ -46,14 +49,14 @@ namespace VRC_SS_Butler
         private void file_Created(object sender, FileSystemEventArgs e)
         {
             Thread.Sleep(3000);
-            var fileButler = new File_Butler();
+            
             string dateText = fileButler.isRegMatch(e.Name);
             var folderName = fileButler.makeFolderName(dateText);
-            fileButler.moveFileTo(e.FullPath, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat\" + folderName);
+            fileButler.moveFileTo(e.FullPath, fileButler.VrcPicFolderPath + folderName);
 
             if (Properties.Settings.Default.targetPath != "")
             {
-                fileButler.copyFoluderTo(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat\" + folderName, Properties.Settings.Default.targetPath + @"\VRChat\" + folderName);
+                fileButler.copyFoluderTo(fileButler.VrcPicFolderPath + folderName, Properties.Settings.Default.targetPath + folderName);
             }
         }
     }

@@ -54,21 +54,21 @@ namespace VRC_SS_Butler
             if (mesBoxResult == MessageBoxResult.No) return;
             settingsSave();
             var fileButler = new File_Butler();
-            var di = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat");
+            var di = new DirectoryInfo(fileButler.VrcPicFolderPath);
             var files = di.GetFiles("*.png", SearchOption.AllDirectories);
             foreach (var f in files)
             {
                 string dateText = fileButler.isRegMatch(f.FullName);
                 if (dateText == "") continue;
                 var folderName = fileButler.makeFolderName(dateText);
-                fileButler.moveFileTo(f.FullName, System.Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat\" + folderName);
+                fileButler.moveFileTo(f.FullName, fileButler.VrcPicFolderPath + folderName);
             }
             if (targetCopyPathTextBox.Text != "")
             {
-                fileButler.copyFoluderTo(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat", targetCopyPathTextBox.Text + @"\VRChat");
+                fileButler.copyFoluderTo(fileButler.VrcPicFolderPath, targetCopyPathTextBox.Text);
             }
             Thread.Sleep(3000);
-            fileButler.emptyFoldersRemove(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat");
+            fileButler.emptyFoldersRemove(fileButler.VrcPicFolderPath);
             MessageBox.Show("処理が完了しました", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 

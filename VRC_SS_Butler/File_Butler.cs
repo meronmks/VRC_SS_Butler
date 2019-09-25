@@ -11,9 +11,12 @@ namespace VRC_SS_Butler
     {
         private System.Text.RegularExpressions.Regex reg;
 
+        public string VrcPicFolderPath { get; private set; }
+
         public File_Butler()
         {
             reg = new System.Text.RegularExpressions.Regex(@"[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}");
+            VrcPicFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat\";
         }
 
         public void moveFileTo(string sourceFile, string targetPath)
@@ -45,6 +48,7 @@ namespace VRC_SS_Butler
 
         public void copyFoluderTo(string sourcePath, string targetPath)
         {
+            if (targetPath.Contains(VrcPicFolderPath)) return;
             if (!isFolderExists(targetPath))
             {
                 Directory.CreateDirectory(targetPath);
