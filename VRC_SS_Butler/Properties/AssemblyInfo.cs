@@ -8,7 +8,7 @@ using System.Windows;
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
 [assembly: AssemblyTitle("VRC SS Butler")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("OSログイン時に常駐しVRChat内で撮影した写真を自動的に日付分類とバックアップ先のフォルダへコピーしてくれるツールです。")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("VRC SS Butler")]

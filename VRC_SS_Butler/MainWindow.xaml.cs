@@ -65,9 +65,9 @@ namespace VRC_SS_Butler
             }
             if (targetCopyPathTextBox.Text != "")
             {
-                fileButler.copyFoluderTo(fileButler.VrcPicFolderPath, targetCopyPathTextBox.Text);
+                fileButler.copyFoluderTo(fileButler.VrcPicFolderPath, fileButler.TargetCopyFolderPath);
             }
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
             fileButler.emptyFoldersRemove(fileButler.VrcPicFolderPath);
             MessageBox.Show("処理が完了しました", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }

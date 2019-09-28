@@ -48,7 +48,7 @@ namespace VRC_SS_Butler
 
         private void file_Created(object sender, FileSystemEventArgs e)
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
             
             string dateText = fileButler.isRegMatch(e.Name);
             var folderName = fileButler.makeFolderName(dateText);
@@ -56,7 +56,7 @@ namespace VRC_SS_Butler
 
             if (Properties.Settings.Default.targetPath != "")
             {
-                fileButler.copyFoluderTo(fileButler.VrcPicFolderPath + folderName, Properties.Settings.Default.targetPath + folderName);
+                fileButler.copyFoluderTo(fileButler.VrcPicFolderPath + folderName, fileButler.TargetCopyFolderPath + folderName);
             }
         }
     }

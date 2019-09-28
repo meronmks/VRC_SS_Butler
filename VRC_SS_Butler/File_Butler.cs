@@ -11,12 +11,39 @@ namespace VRC_SS_Butler
     {
         private System.Text.RegularExpressions.Regex reg;
 
-        public string VrcPicFolderPath { get; private set; }
+        private string vrcPicFolderPath;
+        public string VrcPicFolderPath {
+            get {
+                if (vrcPicFolderPath.EndsWith(@"\"))
+                {
+                    return vrcPicFolderPath;
+                }
+                else
+                {
+                    return vrcPicFolderPath + @"\";
+                }
+            }
+        }
+
+        public string TargetCopyFolderPath
+        {
+            get
+            {
+                if (Properties.Settings.Default.targetPath.EndsWith(@"\"))
+                {
+                    return Properties.Settings.Default.targetPath;
+                }
+                else
+                {
+                    return Properties.Settings.Default.targetPath + @"\";
+                }
+            }
+        }
 
         public File_Butler()
         {
             reg = new System.Text.RegularExpressions.Regex(@"[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}");
-            VrcPicFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat\";
+            vrcPicFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat\";
         }
 
         public void moveFileTo(string sourceFile, string targetPath)
@@ -48,7 +75,7 @@ namespace VRC_SS_Butler
 
         public void copyFoluderTo(string sourcePath, string targetPath)
         {
-            if (targetPath.Contains(VrcPicFolderPath)) return;
+            if (targetPath.Contains(vrcPicFolderPath)) return;
             if (!isFolderExists(targetPath))
             {
                 Directory.CreateDirectory(targetPath);
