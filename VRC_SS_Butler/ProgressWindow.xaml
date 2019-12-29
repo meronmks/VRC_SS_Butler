@@ -1,0 +1,14 @@
+﻿<Window x:Class="VRC_SS_Butler.ProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VRC_SS_Butler"
+        mc:Ignorable="d"
+        Title="ProgressWindow" Height="121.004" Width="299.257" WindowStyle="ToolWindow" MinWidth="299.257" MinHeight="121.004" MaxHeight="121.004" MaxWidth="299.257" ContentRendered="Window_ContentRendered">
+    <Grid>
+        <ProgressBar x:Name="ssButlerProgressBar" HorizontalAlignment="Left" Height="26" Margin="10,41,0,0" VerticalAlignment="Top" Width="272"/>
+        <Label x:Name="progressTextLabel" Content="進捗状況表示　0 / N" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"/>
+
+    </Grid>
+</Window>

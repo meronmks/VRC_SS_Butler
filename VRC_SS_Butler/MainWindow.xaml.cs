@@ -50,26 +50,11 @@ namespace VRC_SS_Butler
 
         private void onClick_folderSyncButton(object sender, RoutedEventArgs e)
         {
-            var mesBoxResult = MessageBox.Show("処理を実行しますか？\r\n（しばらくフリーズしたように見えますが仕様です）", "確認", MessageBoxButton.YesNo, MessageBoxImage.Information);
+            var mesBoxResult = MessageBox.Show("処理を実行しますか？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Information);
             if (mesBoxResult == MessageBoxResult.No) return;
             settingsSave();
-            var fileButler = new File_Butler();
-            var di = new DirectoryInfo(fileButler.VrcPicFolderPath);
-            var files = di.GetFiles("*.png", SearchOption.AllDirectories);
-            foreach (var f in files)
-            {
-                string dateText = fileButler.isRegMatch(f.FullName);
-                if (dateText == "") continue;
-                var folderName = fileButler.makeFolderName(dateText);
-                fileButler.moveFileTo(f.FullName, fileButler.VrcPicFolderPath + folderName);
-            }
-            if (targetCopyPathTextBox.Text != "")
-            {
-                fileButler.copyFoluderTo(fileButler.VrcPicFolderPath, fileButler.TargetCopyFolderPath);
-            }
-            Thread.Sleep(2000);
-            fileButler.emptyFoldersRemove(fileButler.VrcPicFolderPath);
-            MessageBox.Show("処理が完了しました", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            var progressWindow = new ProgressWindow(targetCopyPathTextBox.Text);
+            progressWindow.ShowDialog();
         }
 
         private void settingsSave()
