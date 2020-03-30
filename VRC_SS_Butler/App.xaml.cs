@@ -42,7 +42,7 @@ namespace VRC_SS_Butler
                 mutex.Close();
             }
             base.OnExit(e);
-            this.notifyIcon.Dispose();
+            notifyIcon?.Dispose();
         }
     }
 }

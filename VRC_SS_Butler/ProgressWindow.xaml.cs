@@ -22,6 +22,10 @@ namespace VRC_SS_Butler
     public partial class ProgressWindow : Window
     {
         private string targetCopyPathTextBoxText;
+        private FileInfo[] files = null;
+        private int compFiles;
+        private string progressTextLabelContent;
+
         public ProgressWindow(string targetCopyPathTextBoxText)
         {
             InitializeComponent();
@@ -32,22 +36,31 @@ namespace VRC_SS_Butler
         {
             var p = new Progress<float>(ShowProgress);
             await Task.Run(() => DoWork(p));
+            ssButlerProgressBar.IsIndeterminate = false;
             MessageBox.Show("処理が完了しました", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             this.Close();
         }
 
         private void ShowProgress(float percent)
         {
-            progressTextLabel.Content = percent + "％完了";
-            ssButlerProgressBar.Value = (int)percent;
+            progressTextLabel.Content = progressTextLabelContent;
+            if (percent <= 100.0f)
+            {
+                ssButlerProgressBar.Value = (int)percent;
+            }
+            else
+            {
+                ssButlerProgressBar.IsIndeterminate = true;
+            }
         }
 
         private void DoWork(IProgress<float> progress)
         {
             var fileButler = new File_Butler();
             var di = new DirectoryInfo(fileButler.VrcPicFolderPath);
-            var files = di.GetFiles("*.png", SearchOption.AllDirectories);
-            var compFiles = 0;
+            files = di.GetFiles("*.png", SearchOption.AllDirectories);
+            compFiles = 0;
+            progressTextLabelContent = $"処理中・・・　{compFiles} / {files.Length}";
             progress.Report(0.0f);
             foreach (var f in files)
             {
@@ -56,15 +69,21 @@ namespace VRC_SS_Butler
                 var folderName = fileButler.makeFolderName(dateText);
                 fileButler.moveFileTo(f.FullName, fileButler.VrcPicFolderPath + folderName);
                 compFiles++;
+                progressTextLabelContent = $"処理中・・・　{compFiles} / {files.Length}";
                 progress.Report((float)compFiles / (float)files.Length);
             }
+            progressTextLabelContent = "分類完了！";
             progress.Report(100.0f);
+            Thread.Sleep(2000);
+            progressTextLabelContent = "空のフォルダをクリーンアップ中・・・";
+            progress.Report(200.0f);
+            fileButler.emptyFoldersRemove(fileButler.VrcPicFolderPath);
             if (this.targetCopyPathTextBoxText != "")
             {
+                progressTextLabelContent = "バックアップ先へコピー中・・・";
+                progress.Report(200.0f);
                 fileButler.copyFoluderTo(fileButler.VrcPicFolderPath, fileButler.TargetCopyFolderPath);
             }
-            Thread.Sleep(2000);
-            fileButler.emptyFoldersRemove(fileButler.VrcPicFolderPath);
         }
     }
 }
