@@ -28,50 +28,50 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NotifyIconWrapper));
-            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem_Open = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileSystemWatcher = new System.IO.FileSystemWatcher();
-            this.contextMenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher)).BeginInit();
+            notifyIcon = new System.Windows.Forms.NotifyIcon(components);
+            contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(components);
+            toolStripMenuItem_Open = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripMenuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            fileSystemWatcher = new System.IO.FileSystemWatcher();
+            contextMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)fileSystemWatcher).BeginInit();
             // 
             // notifyIcon
             // 
-            this.notifyIcon.ContextMenuStrip = this.contextMenuStrip;
-            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            this.notifyIcon.Text = "VRC_SS_Butler";
-            this.notifyIcon.Visible = true;
+            notifyIcon.ContextMenuStrip = contextMenuStrip;
+            notifyIcon.Icon = (System.Drawing.Icon)resources.GetObject("notifyIcon.Icon");
+            notifyIcon.Text = "VRC_SS_Butler";
+            notifyIcon.Visible = true;
+            notifyIcon.MouseClick += notifyIcon_MouseClick;
             // 
             // contextMenuStrip
             // 
-            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_Open,
-            this.toolStripMenuItem_Exit});
-            this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(99, 48);
+            contextMenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem_Open, toolStripMenuItem_Exit });
+            contextMenuStrip.Name = "contextMenuStrip";
+            contextMenuStrip.Size = new System.Drawing.Size(99, 48);
             // 
             // toolStripMenuItem_Open
             // 
-            this.toolStripMenuItem_Open.Name = "toolStripMenuItem_Open";
-            this.toolStripMenuItem_Open.Size = new System.Drawing.Size(98, 22);
-            this.toolStripMenuItem_Open.Text = "設定";
+            toolStripMenuItem_Open.Name = "toolStripMenuItem_Open";
+            toolStripMenuItem_Open.Size = new System.Drawing.Size(98, 22);
+            toolStripMenuItem_Open.Text = "設定";
             // 
             // toolStripMenuItem_Exit
             // 
-            this.toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
-            this.toolStripMenuItem_Exit.Size = new System.Drawing.Size(98, 22);
-            this.toolStripMenuItem_Exit.Text = "終了";
+            toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
+            toolStripMenuItem_Exit.Size = new System.Drawing.Size(98, 22);
+            toolStripMenuItem_Exit.Text = "終了";
             // 
             // fileSystemWatcher
             // 
-            this.fileSystemWatcher.EnableRaisingEvents = true;
-            this.fileSystemWatcher.Filter = "*.png";
-            this.contextMenuStrip.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher)).EndInit();
-
+            fileSystemWatcher.EnableRaisingEvents = true;
+            fileSystemWatcher.Filter = "*.png";
+            fileSystemWatcher.SynchronizingObject = null;
+            contextMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)fileSystemWatcher).EndInit();
         }
 
         #endregion

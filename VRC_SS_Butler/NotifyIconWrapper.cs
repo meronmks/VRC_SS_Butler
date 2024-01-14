@@ -49,7 +49,7 @@ namespace VRC_SS_Butler
         private void file_Created(object sender, FileSystemEventArgs e)
         {
             Thread.Sleep(2000);
-            
+
             string dateText = fileButler.isRegMatch(e.Name);
             var folderName = fileButler.makeFolderName(dateText);
             fileButler.moveFileTo(e.FullPath, fileButler.VrcPicFolderPath + folderName);
@@ -57,6 +57,15 @@ namespace VRC_SS_Butler
             if (Properties.Settings.Default.targetPath != "")
             {
                 fileButler.copyFoluderTo(fileButler.VrcPicFolderPath + folderName, fileButler.TargetCopyFolderPath + folderName);
+            }
+        }
+
+        private void notifyIcon_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                var wnd = new MainWindow();
+                wnd.Show();
             }
         }
     }
