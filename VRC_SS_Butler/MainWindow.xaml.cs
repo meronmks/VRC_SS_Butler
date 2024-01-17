@@ -40,6 +40,7 @@ namespace VRC_SS_Butler
                 folderMakeOptionYear.IsChecked = true;
             }
             timeTextBox.Text = Properties.Settings.Default.timeChangeLine.ToString();
+            versionTextBlock.Text = "Version v" + Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
         }
 
         private void onClick_okButton(object sender, RoutedEventArgs e)

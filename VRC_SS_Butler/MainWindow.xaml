@@ -21,6 +21,7 @@
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="10,59,0,0"><Run Text="日付変更線"/><Run Text="（指定時刻まで前日として扱う）"/></TextBlock>
         <TextBox x:Name="timeTextBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="43" Margin="10,80,0,0" MaxLines="1" MaxLength="2" HorizontalContentAlignment="Right" InputMethod.IsInputMethodEnabled="False" PreviewTextInput="timeTextBox_PreviewTextInput" CommandManager.PreviewExecuted="timeTextBox_PreviewExecuted"/>
         <TextBlock HorizontalAlignment="Left" Margin="58,81,0,0" TextWrapping="Wrap" Text="時" VerticalAlignment="Top" RenderTransformOrigin="0.061,0.271"/>
+        <TextBlock x:Name="versionTextBlock" HorizontalAlignment="Left" Margin="10,241,0,0" TextWrapping="Wrap" Text="Version" VerticalAlignment="Top" RenderTransformOrigin="-0.185,0.503"/>
 
     </Grid>
 </Window>
