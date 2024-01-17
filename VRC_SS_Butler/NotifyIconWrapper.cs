@@ -23,8 +23,11 @@ namespace VRC_SS_Butler
             this.toolStripMenuItem_Exit.Click += this.tootStripMenuItem_Exit_Click;
 
             fileButler = new File_Butler();
-            fileSystemWatcher.Path = fileButler.VrcPicFolderPath;
-            fileSystemWatcher.Created += file_Created;
+            if(fileButler.IsValidPath())
+            {
+                fileSystemWatcher.Path = fileButler.VrcPicFolderPath;
+                fileSystemWatcher.Created += file_Created;
+            }
         }
 
         public NotifyIconWrapper(IContainer container)

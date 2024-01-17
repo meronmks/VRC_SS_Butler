@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace VRC_SS_Butler
@@ -10,6 +11,12 @@ namespace VRC_SS_Butler
     public class File_Butler
     {
         private System.Text.RegularExpressions.Regex reg;
+        private string confJsonPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).Replace("Roaming", "LocalLow") + @"\VRChat\VRChat\config.json";
+        public string ConfJsonPath { get { return confJsonPath; } }
+
+        // VRC公式でのフォルダ仕分け機能の利用有無
+        private bool vrcSplitByDate = true;
+        public bool VrcSplitByDate { get { return vrcSplitByDate; } }
 
         private string vrcPicFolderPath;
         public string VrcPicFolderPath {
@@ -43,7 +50,30 @@ namespace VRC_SS_Butler
         public File_Butler()
         {
             reg = new System.Text.RegularExpressions.Regex(@"[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}");
-            vrcPicFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat\";
+            vrcPicFolderPath = GetVrcPicFolderPath();
+        }
+
+        private string GetVrcPicFolderPath()
+        {
+            if (File.Exists(confJsonPath))
+            {
+                var json = JsonNode.Parse(File.ReadAllText(confJsonPath));
+                if (json["picture_output_split_by_date"] != null)
+                {
+                    vrcSplitByDate = json["picture_output_split_by_date"].ToString() == "true";
+                }
+                if (json["picture_output_folder"] != null)
+                {
+                    return json["picture_output_folder"].ToString().Replace(@"\\",@"\").Replace(@"/",@"\");
+                }
+            }
+
+            return Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\VRChat\";
+        }
+
+        public bool IsValidPath()
+        {
+            return System.IO.Directory.Exists(vrcPicFolderPath);
         }
 
         public void moveFileTo(string sourceFile, string targetPath)

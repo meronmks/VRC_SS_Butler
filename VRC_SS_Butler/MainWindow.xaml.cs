@@ -41,6 +41,12 @@ namespace VRC_SS_Butler
             }
             timeTextBox.Text = Properties.Settings.Default.timeChangeLine.ToString();
             versionTextBlock.Text = "Version v" + Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+
+            var fileButler = new File_Butler();
+            if (!fileButler.IsValidPath())
+            {
+                MessageBox.Show($"VRCの「picture_output_folder」に設定された以下フォルダ名は正しくない可能性があります。\r\n{fileButler.VrcPicFolderPath}", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void onClick_okButton(object sender, RoutedEventArgs e)
