@@ -45,6 +45,7 @@ namespace VRC_SS_Butler
 
         private void tootStripMenuItem_Exit_Click(object sender, EventArgs e)
         {
+            fileSystemWatcher.Created -= file_Created;
             fileSystemWatcher.Dispose();
             Application.Current.Shutdown();
         }
