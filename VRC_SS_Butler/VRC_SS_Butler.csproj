@@ -9,7 +9,7 @@
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 	<VersionPrefix>1.6.0</VersionPrefix>
-	<VersionSuffix>beta.1</VersionSuffix>
+	<VersionSuffix>beta.2</VersionSuffix>
 	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
   <PropertyGroup>
