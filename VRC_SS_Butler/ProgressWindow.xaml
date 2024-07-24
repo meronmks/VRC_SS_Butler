@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VRC_SS_Butler"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
         Title="しばらくお待ちください・・・" Height="121.004" Width="299.257" WindowStyle="ToolWindow" MinWidth="299.257" MinHeight="121.004" MaxHeight="121.004" MaxWidth="299.257" ContentRendered="Window_ContentRendered">
     <Grid>
         <ProgressBar x:Name="ssButlerProgressBar" HorizontalAlignment="Left" Height="26" Margin="10,41,0,0" VerticalAlignment="Top" Width="272"/>

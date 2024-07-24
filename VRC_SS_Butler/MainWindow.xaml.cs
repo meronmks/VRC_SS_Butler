@@ -61,6 +61,7 @@ namespace VRC_SS_Butler
             if (mesBoxResult == MessageBoxResult.No) return;
             settingsSave();
             var progressWindow = new ProgressWindow(targetCopyPathTextBox.Text);
+            progressWindow.Owner = this;
             progressWindow.ShowDialog();
         }
 
