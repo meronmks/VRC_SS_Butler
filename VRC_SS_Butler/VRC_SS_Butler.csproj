@@ -34,6 +34,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="WPFTaskDialog" Version="1.7.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Properties\Settings.settings">
