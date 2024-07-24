@@ -45,7 +45,7 @@ namespace VRC_SS_Butler
             var fileButler = new File_Butler();
             if (!fileButler.IsValidPath())
             {
-                MessageBox.Show($"VRCの「picture_output_folder」に設定された以下フォルダ名は正しくない可能性があります。\r\n{fileButler.VrcPicFolderPath}", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"VRCのconfig「picture_output_folder」に設定された以下フォルダが存在しないようです。\r\n設定値：{fileButler.VrcPicFolderPath}", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
