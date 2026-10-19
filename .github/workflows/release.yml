@@ -1,0 +1,96 @@
+name: リリースビルド
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'ビルドする既存リリースのタグ（例: v1.6.0-beta.2）'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Windows 64bit 版の作成と添付
+    runs-on: windows-2022
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+
+    steps:
+      - name: タグとリリースの確認
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ($env:RELEASE_TAG -cnotmatch '^v?(\d+\.\d+\.\d+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?)$') {
+            throw 'エラー: タグの形式が不正です。詳細: バージョンを取得できません。解決方法: v1.6.0 または v1.6.0-beta.2 の形式で指定してください。'
+          }
+          "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
+          gh release view $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: リリースタグのソースを取得
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
+          persist-credentials: false
+
+      - name: .NET 8 SDK の準備
+        id: dotnet
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: .NET 同梱の実行ファイルをビルド
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          DOTNET_SDK_VERSION: ${{ steps.dotnet.outputs.dotnet-version }}
+        run: |
+          dotnet new globaljson --sdk-version $env:DOTNET_SDK_VERSION --roll-forward latestPatch --force
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet publish VRC_SS_Butler/VRC_SS_Butler.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:Version=$env:RELEASE_VERSION `
+            --output artifacts/publish
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: ZIP と SHA-256 チェックサムの作成
+        run: |
+          if (-not (Test-Path artifacts/publish/VRC_SS_Butler.exe)) {
+            throw 'エラー: 実行ファイルがありません。詳細: ビルド結果を確認できません。解決方法: ビルドログを確認してください。'
+          }
+          $archiveName = "VRC_SS_Butler-$env:RELEASE_TAG-win-x64.zip"
+          $archivePath = Join-Path artifacts $archiveName
+          Compress-Archive -Path artifacts/publish/* -DestinationPath $archivePath
+          $hash = (Get-FileHash $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  $archiveName" | Set-Content "$archivePath.sha256" -Encoding utf8
+
+      - name: リリースページへ添付
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $archivePath = "artifacts/VRC_SS_Butler-$env:RELEASE_TAG-win-x64.zip"
+          gh release upload $env:RELEASE_TAG $archivePath "$archivePath.sha256" `
+            --repo $env:GITHUB_REPOSITORY --clobber
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          "ダウンロード先: https://github.com/$env:GITHUB_REPOSITORY/releases/tag/$env:RELEASE_TAG" >> $env:GITHUB_STEP_SUMMARY
