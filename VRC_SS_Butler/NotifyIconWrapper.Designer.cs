@@ -13,9 +13,10 @@
         /// <param name="disposing">マネージド リソースを破棄する場合は true を指定し、その他の場合は false を指定します。</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                StopMonitoring();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -34,9 +35,7 @@
             contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(components);
             toolStripMenuItem_Open = new System.Windows.Forms.ToolStripMenuItem();
             toolStripMenuItem_Exit = new System.Windows.Forms.ToolStripMenuItem();
-            fileSystemWatcher = new System.IO.FileSystemWatcher();
             contextMenuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)fileSystemWatcher).BeginInit();
             // 
             // notifyIcon
             // 
@@ -64,14 +63,7 @@
             toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
             toolStripMenuItem_Exit.Size = new System.Drawing.Size(98, 22);
             toolStripMenuItem_Exit.Text = "終了";
-            // 
-            // fileSystemWatcher
-            // 
-            fileSystemWatcher.EnableRaisingEvents = true;
-            fileSystemWatcher.Filter = "*.png";
-            fileSystemWatcher.SynchronizingObject = null;
             contextMenuStrip.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)fileSystemWatcher).EndInit();
         }
 
         #endregion
@@ -80,6 +72,5 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Open;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Exit;
-        private System.IO.FileSystemWatcher fileSystemWatcher;
     }
 }

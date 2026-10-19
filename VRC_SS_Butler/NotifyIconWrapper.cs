@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace VRC_SS_Butler
@@ -14,7 +9,8 @@ namespace VRC_SS_Butler
     public partial class NotifyIconWrapper : Component
     {
 
-        private File_Butler fileButler;
+        private readonly File_Butler fileButler;
+        private ScreenshotMonitor screenshotMonitor;
         public NotifyIconWrapper()
         {
             InitializeComponent();
@@ -25,16 +21,21 @@ namespace VRC_SS_Butler
             fileButler = new File_Butler();
             if(fileButler.IsValidPath())
             {
-                fileSystemWatcher.Path = fileButler.VrcPicFolderPath;
-                fileSystemWatcher.Created += file_Created;
+                screenshotMonitor = new ScreenshotMonitor(fileButler.VrcPicFolderPath,
+                    name =>
+                    {
+                        string dateText = fileButler.isRegMatch(name);
+                        return dateText == "" ? null : fileButler.makeFolderName(dateText);
+                    },
+                    () => Properties.Settings.Default.targetPath);
+                screenshotMonitor.Error += OnMonitorError;
+                screenshotMonitor.Start();
             }
         }
 
-        public NotifyIconWrapper(IContainer container)
+        public NotifyIconWrapper(IContainer container) : this()
         {
             container.Add(this);
-
-            InitializeComponent();
         }
 
         private void tootStripMenuItem_Open_Click(object sender, EventArgs e)
@@ -45,23 +46,31 @@ namespace VRC_SS_Butler
 
         private void tootStripMenuItem_Exit_Click(object sender, EventArgs e)
         {
-            fileSystemWatcher.Created -= file_Created;
-            fileSystemWatcher.Dispose();
             Application.Current.Shutdown();
         }
 
-        private void file_Created(object sender, FileSystemEventArgs e)
+        private void OnMonitorError(object sender, ErrorEventArgs e)
         {
-            Thread.Sleep(2000);
-
-            string dateText = fileButler.isRegMatch(e.Name);
-            var folderName = fileButler.makeFolderName(dateText);
-            fileButler.moveFileTo(e.FullPath, fileButler.VrcPicFolderPath + folderName);
-
-            if (Properties.Settings.Default.targetPath != "")
+            Trace.TraceError(e.GetException().ToString());
+            var dispatcher = Application.Current.Dispatcher;
+            if (dispatcher.HasShutdownStarted) return;
+            dispatcher.BeginInvoke(new Action(() =>
             {
-                fileButler.copyFoluderTo(fileButler.VrcPicFolderPath + folderName, fileButler.TargetCopyFolderPath + folderName);
-            }
+                if (screenshotMonitor == null) return;
+                notifyIcon.ShowBalloonTip(5000, "VRC SS Butler",
+                    "エラー: 画像の自動整理に失敗しました。\n" +
+                    $"詳細: {e.GetException().Message}\n" +
+                    "解決方法: 保存先とアクセス権を確認し、設定から手動整理を実行してください。",
+                    System.Windows.Forms.ToolTipIcon.Warning);
+            }));
+        }
+
+        private void StopMonitoring()
+        {
+            if (screenshotMonitor == null) return;
+            screenshotMonitor.Error -= OnMonitorError;
+            screenshotMonitor.Dispose();
+            screenshotMonitor = null;
         }
 
         private void notifyIcon_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
